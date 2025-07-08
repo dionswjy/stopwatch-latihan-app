@@ -6,6 +6,7 @@ package com.uas.stopwatch.latihan.app.view;
 
 import com.uas.stopwatch.latihan.app.controller.JadwalController;
 import com.uas.stopwatch.latihan.app.model.Latihan;
+import com.uas.stopwatch.latihan.app.util.LocaleUtil;
 import javax.swing.*;
 import java.awt.*;
 
@@ -17,9 +18,9 @@ import java.awt.*;
 public class JadwalPanel extends JPanel{
     
     private JTextField namaField, durasiField, hariField;
-    private JButton tambahBtn, lihatBtn;
+    private JButton tambahBtn, lihatBtn, hapusBtn;
     private JTextArea outputArea;
-    
+    private JLabel hariLabel, namaLatihanLabel, durasiLabel;
     private JadwalController<String> jadwalController;
 
     /**
@@ -27,49 +28,93 @@ public class JadwalPanel extends JPanel{
      */
     public JadwalPanel() {
         jadwalController = new JadwalController<>();
-        
         setLayout(new BorderLayout());
-        
-        JPanel inputPanel = new JPanel(new GridLayout(4, 2));
-        inputPanel.add(new JLabel("Hari:"));
+        // ───── Panel Input ─────
+        JPanel inputPanel = new JPanel(new GridLayout(3, 2, 5, 5));
+
+        hariLabel = new JLabel(LocaleUtil.getString("label.hari"));
         hariField = new JTextField();
+        inputPanel.add(hariLabel);
         inputPanel.add(hariField);
 
-        inputPanel.add(new JLabel("Nama Latihan:"));
+        namaLatihanLabel = new JLabel(LocaleUtil.getString("label.namaLatihan"));
         namaField = new JTextField();
+        inputPanel.add(namaLatihanLabel);
         inputPanel.add(namaField);
 
-        inputPanel.add(new JLabel("Durasi:"));
+        durasiLabel = new JLabel(LocaleUtil.getString("label.durasi"));
         durasiField = new JTextField();
+        inputPanel.add(durasiLabel);
         inputPanel.add(durasiField);
 
-        tambahBtn = new JButton("Tambah");
-        lihatBtn = new JButton("Lihat Semua");
+        // ───── Panel Tombol ─────
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
+        tambahBtn = new JButton(LocaleUtil.getString("label.tambah"));
+        lihatBtn = new JButton(LocaleUtil.getString("label.lihatSemua"));
+        hapusBtn = new JButton(LocaleUtil.getString("label.hapusSemua"));
+        buttonPanel.add(tambahBtn);
+        buttonPanel.add(lihatBtn);
+        buttonPanel.add(hapusBtn);
 
-        inputPanel.add(tambahBtn);
-        inputPanel.add(lihatBtn);
+        // ───── Gabungkan ke Panel Atas ─────
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(inputPanel, BorderLayout.NORTH);
+        topPanel.add(buttonPanel, BorderLayout.SOUTH);
+        add(topPanel, BorderLayout.NORTH);
 
-        add(inputPanel, BorderLayout.NORTH);
-
+        // ───── Output Area ─────
         outputArea = new JTextArea();
+        outputArea.setEditable(false);
         add(new JScrollPane(outputArea), BorderLayout.CENTER);
 
+        // ───── Listener Tombol ─────
         tambahBtn.addActionListener(e -> {
             String hari = hariField.getText();
             String nama = namaField.getText();
             String durasi = durasiField.getText();
 
-            Latihan<String> latihan = new Latihan<>(nama, durasi);
+            Latihan<String> latihan = new Latihan<>(hari, nama, durasi);
             jadwalController.tambahLatihan(hari, latihan);
-
-            JOptionPane.showMessageDialog(this, "Latihan ditambahkan!");
+            JOptionPane.showMessageDialog(this, LocaleUtil.getString("latihanDitambahkan"));
+            hariField.setText("");
+            namaField.setText("");
+            durasiField.setText("");
         });
-        
+
         lihatBtn.addActionListener(e -> {
-            outputArea.setText(jadwalController.ambilSemuaLatihan().toString());
+            StringBuilder sb = new StringBuilder();
+            for (Latihan<String> l : jadwalController.ambilSemuaLatihan().getDaftarLatihan()) {
+                sb.append("Hari: ").append(l.getHari()).append("\n");
+                sb.append("Nama Latihan: ").append(l.getNamaLatihan()).append("\n");
+                sb.append("Durasi: ").append(l.getDurasi()).append("\n");
+                sb.append("------------------------------\n");
+            }
+            outputArea.setText(sb.toString());
         });
 
+        hapusBtn.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Apakah yakin ingin menghapus semua data?",
+                    "Konfirmasi Hapus",
+                    JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                jadwalController.hapusSemuaLatihan();
+                outputArea.setText("");
+                JOptionPane.showMessageDialog(this, "Semua data berhasil dihapus.");
+            }
+        });
     }
+
+    
+
+        public void updateTexts() {
+            hariLabel.setText(LocaleUtil.getString("label.hari"));
+            namaLatihanLabel.setText(LocaleUtil.getString("label.namaLatihan"));
+            durasiLabel.setText(LocaleUtil.getString("label.durasi"));
+            tambahBtn.setText(LocaleUtil.getString("label.tambah"));
+            lihatBtn.setText(LocaleUtil.getString("label.lihatSemua"));
+            hapusBtn.setText(LocaleUtil.getString("label.hapusSemua"));
+        }
 
     /**
      * This method is called from within the constructor to initialize the form.

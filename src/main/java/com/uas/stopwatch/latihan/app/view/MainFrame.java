@@ -1,5 +1,8 @@
 package com.uas.stopwatch.latihan.app.view;
 
+import com.uas.stopwatch.latihan.app.util.LocaleUtil;
+import java.awt.BorderLayout;
+import java.util.Locale;
 import javax.swing.*;
 
 /*
@@ -12,27 +15,49 @@ import javax.swing.*;
  * @author LENOVO
  */
 public class MainFrame extends JFrame {
+    private JTabbedPane tabbedPane;
     private StopwatchPanel stopwatchPanel;
     private JadwalPanel jadwalPanel;
+    private JComboBox<String> langCombo;
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
-        setTitle("Stopwatch & Jadwal Latihan");
+        setTitle(LocaleUtil.getString("app.title"));
         setSize(800, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        
+
         stopwatchPanel = new StopwatchPanel();
         jadwalPanel = new JadwalPanel();
 
-        JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.add("Stopwatch", new StopwatchPanel());
-        tabbedPane.add("Jadwal", new JadwalPanel());
+        tabbedPane = new JTabbedPane();
+        tabbedPane.add(LocaleUtil.getString("tab.stopwatch"), stopwatchPanel);
+        tabbedPane.add(LocaleUtil.getString("tab.schedule"), jadwalPanel);
 
-        add(tabbedPane);
+        langCombo = new JComboBox<>(new String[]{"English", "Bahasa"});
+        langCombo.addActionListener(e -> {
+            String selected = (String) langCombo.getSelectedItem();
+            if ("Bahasa".equals(selected)) {
+                LocaleUtil.setLocale(new Locale("id"));
+            } else {
+                LocaleUtil.setLocale(new Locale("en"));
+            }
+            refreshText();
+        });
+
+        add(langCombo, BorderLayout.NORTH);
+        add(tabbedPane, BorderLayout.CENTER);
     }
 
+    private void refreshText() {
+        setTitle(LocaleUtil.getString("app.title"));
+        tabbedPane.setTitleAt(0, LocaleUtil.getString("tab.stopwatch"));
+        tabbedPane.setTitleAt(1, LocaleUtil.getString("tab.schedule"));
+        
+        stopwatchPanel.updateTexts();
+        jadwalPanel.updateTexts();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

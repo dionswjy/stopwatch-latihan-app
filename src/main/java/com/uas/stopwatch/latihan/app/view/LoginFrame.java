@@ -5,6 +5,7 @@
 package com.uas.stopwatch.latihan.app.view;
 
 import com.uas.stopwatch.latihan.app.util.CryptoUtil;
+import com.uas.stopwatch.latihan.app.util.LocaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,35 +15,33 @@ import java.util.Objects;
  * @author LENOVO
  */
 public class LoginFrame extends JFrame {
+
     private JTextField usernameField;
     private JPasswordField passwordField;
-    private JButton loginBtn;
-    
-    
-    // Contoh hash password (seharusnya dari DB)
+    private JButton loginBtn, registerBtn;
+
     private final String storedHash = CryptoUtil.hashSHA256("admin123");
-    
-    /**
-     * Creates new form LoginFrame
-     */
+
     public LoginFrame() {
-        setTitle("Login");
-        setSize(300, 150);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle(LocaleUtil.getString("app.title") + " - Login");
+        setSize(350, 200);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel(new GridLayout(3, 2));
-        panel.add(new JLabel("Username:"));
+        JPanel panel = new JPanel(new GridLayout(4, 2));
+        panel.add(new JLabel(LocaleUtil.getString("label.username")));
         usernameField = new JTextField();
         panel.add(usernameField);
 
-        panel.add(new JLabel("Password:"));
+        panel.add(new JLabel(LocaleUtil.getString("label.password")));
         passwordField = new JPasswordField();
         panel.add(passwordField);
 
-        loginBtn = new JButton("Login");
-        panel.add(new JLabel());
+        loginBtn = new JButton(LocaleUtil.getString("button.login"));
+        registerBtn = new JButton(LocaleUtil.getString("button.register"));
+
         panel.add(loginBtn);
+        panel.add(registerBtn);
 
         add(panel);
 
@@ -52,14 +51,17 @@ public class LoginFrame extends JFrame {
             String hashInput = CryptoUtil.hashSHA256(password);
 
             if (Objects.equals(username, "admin") && hashInput.equals(storedHash)) {
-                JOptionPane.showMessageDialog(this, "Login berhasil!");
+                JOptionPane.showMessageDialog(this, LocaleUtil.getString("message.login.success"));
                 new MainFrame().setVisible(true);
                 dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Username/password salah!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, LocaleUtil.getString("message.login.failed"), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
-    
+
+        registerBtn.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this, "Registrasi Fitur Belum Aktif");
+        });
     }
 
     /**
@@ -90,12 +92,7 @@ public class LoginFrame extends JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+     public static void main(String args[]) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -103,23 +100,11 @@ public class LoginFrame extends JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LoginFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LoginFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LoginFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (Exception ex) {
             java.util.logging.Logger.getLogger(LoginFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new LoginFrame().setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new LoginFrame().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -4,7 +4,7 @@
 
 package com.uas.stopwatch.latihan.app;
 
-import com.uas.stopwatch.latihan.app.view.MainFrame;
+import com.uas.stopwatch.latihan.app.view.LoginFrame;
 
 /**
  *
@@ -14,7 +14,7 @@ public class StopwatchLatihanApp {
 
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(() -> {
-            new MainFrame().setVisible(true);
+            new LoginFrame().setVisible(true);
         });
     }
 }

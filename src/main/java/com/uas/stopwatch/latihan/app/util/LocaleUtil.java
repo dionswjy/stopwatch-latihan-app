@@ -13,19 +13,19 @@ import java.util.ResourceBundle;
  * @author LENOVO
  */
 public class LocaleUtil {
-    private static Locale currentLocale;
-    private static ResourceBundle bundle;
+    private static Locale currentLocale = new Locale("en");
+    private static ResourceBundle bundle = ResourceBundle.getBundle("lang.lang", currentLocale);
 
-    public static void setLocale(String language, String country) {
-        currentLocale = new Locale(language, country);
-        bundle = ResourceBundle.getBundle("lang", currentLocale);
+    public static void setLocale(Locale locale) {
+        currentLocale = locale;
+        bundle = ResourceBundle.getBundle("lang.lang", currentLocale);
     }
 
-    public static String getText(String key) {
-        if (bundle == null) {
-            // Default ke en_US
-            setLocale("en", "US");
-        }
+    public static String getString(String key) {
         return bundle.getString(key);
+    }
+
+    public static Locale getCurrentLocale() {
+        return currentLocale;
     }
 }

@@ -11,12 +11,22 @@ import java.io.Serializable;
  * @author LENOVO
  */
 public class Latihan<T> implements Serializable {
+    private String hari; 
     private String namaLatihan;
     private T durasi; // Generic: durasi bisa Integer, Double, dll
 
-    public Latihan(String namaLatihan, T durasi) {
+    public Latihan(String hari,String namaLatihan, T durasi) {
+        this.hari = hari;
         this.namaLatihan = namaLatihan;
         this.durasi = durasi;
+    }
+
+     public String getHari() {
+        return hari;
+    }
+
+    public void setHari(String hari) {
+        this.hari = hari;
     }
 
     public String getNamaLatihan() {
@@ -38,8 +48,9 @@ public class Latihan<T> implements Serializable {
     @Override
     public String toString() {
         return "Latihan{" +
-                "namaLatihan='" + namaLatihan + '\'' +
+                "hari='" + hari + '\'' +
+                ", namaLatihan='" + namaLatihan + '\'' +
                 ", durasi=" + durasi +
                 '}';
-    }
+    }  
 }

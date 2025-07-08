@@ -5,6 +5,7 @@
 package com.uas.stopwatch.latihan.app.view;
 
 import com.uas.stopwatch.latihan.app.controller.TimerController;   
+import com.uas.stopwatch.latihan.app.util.LocaleUtil;
 import com.uas.stopwatch.latihan.app.util.TimerListener;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -70,6 +71,11 @@ public class StopwatchPanel extends JPanel implements TimerListener {
             .addGap(0, 300, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    public void updateTexts() {
+        startBtn.setText(LocaleUtil.getString("button.start"));
+        stopBtn.setText(LocaleUtil.getString("button.stop"));
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

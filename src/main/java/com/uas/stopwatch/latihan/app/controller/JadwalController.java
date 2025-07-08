@@ -42,7 +42,7 @@ public class JadwalController<T> {
                 String hari = doc.getString("hari");
 
                 // Asumsi durasi di-cast ke String, nanti bisa diolah ke Integer kalau mau
-                Latihan<T> latihan = new Latihan<>(nama, (T) durasi);
+                Latihan<T> latihan = new Latihan<>(hari,nama, (T) durasi);
                 jadwal.tambahLatihan(latihan);
             }
         }
